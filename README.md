@@ -43,9 +43,9 @@ The goals / steps of this project are the following:
 
 ## Final Video of the Advanced Lane Mapping
 
-![](http://img.youtube.com/vi/x8CfUd0MzoM/maxresdefault.jpg) 
+![youtubeimage](http://img.youtube.com/vi/x8CfUd0MzoM/maxresdefault.jpg) 
 
-![youtube Link](https://www.youtube.com/watch?v=x8CfUd0MzoM)
+[youtube_link](https://youtu.be/x8CfUd0MzoM "youtube_link")
 
 ### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
@@ -64,7 +64,10 @@ Here the images for camera calibration are taken from folder `camera_cal` using 
 `def camera_calibration` creates objp numpy array with 9x6 = 54 points starts from 0,0... 8,5. Loop over the images, convert the images to Gray using cv2.cvtColor function. Now we need to find the corners in the 9x6 board using the cv2.findChessboardCorners function. Once the call for the above is successful we append 3d points in objpoints & imgpoints in image plane.
 
 once we have objpoints and imgpoints we can now calibrate using the cv2.calibrateCamera function Which returns the camera matrix(mtx), distortion coefficients(dist), rotation(rvecs) and translation vectors(tvecs)
-More information about the cv2 function is here.[OpenCV Docs](https://docs.opencv.org/3.4/dc/dbb/tutorial_py_calibration.html)
+More information about the cv2 function is here.
+[OpenCV Docs](https://docs.opencv.org/3.4/dc/dbb/tutorial_py_calibration.html)
+
+
 ![mtransform][image20] 
 
 I start by preparing "object points", which will be the (9, 6, 3) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (9, 6) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (9, 6) pixel position of each of the corners in the image plane with each successful chessboard detection.  
@@ -101,9 +104,9 @@ Look at the following python functions about the color spaces I explored.
 ![Magnitude][image7]
 ![Binary Direction][image8]
 ![Color and Binary][image9]
-![Color Space : RGB] [image10]
-![Color Space HLS] [image11]: 
-![Color Space HSV] [image12]: 
+![Color Space RGB][image10]
+![Color Space HLS][image11] 
+![Color Space HSV][image12] 
 
 
 As you can see after trying out all the different color spaces such as RGB, HLS, HSV I settled for Combined color code is as shown below
@@ -136,7 +139,7 @@ def combined_color(img):
     
      return binary
 ```
-![Final Chosen Color Space] [image13]
+![Final Chosen Color Space][image13]
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
@@ -204,15 +207,19 @@ def polynomial_fit(warped, left_indices, right_indices, left_fit, right_fit):
 def modified_windows(warped, left_fit, right_fit):
 ```
 
-![Tuned Windows] [image17]
+![Tuned Windows][image17]
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
 Calculation of Radius of Curvature of Lane is extensively discussed in the Class Materials.The radius of curvature are calculate by following equation:
+
 R = [1 + (2Ay + B)^2]^3/2 / |2A| 
+
+
+
 the postion to center is the distance between middle of image(640) and the middel of lane lines at the bottom.
 
-![Radius of Curvature] [image18]
+![Radius of Curvature][image18]
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
@@ -244,7 +251,7 @@ You can run the in[29] cell in the ipynb notebook and findout the implementation
 Here's a [link to my video result](./output_project_video_1.mp4)
 youtube link for the same is here ![youtube Link](https://www.youtube.com/watch?v=x8CfUd0MzoM)
 
-![youtube-icon](http://img.youtube.com/vi/x8CfUd0MzoM/maxresdefault.jpg) 
+[youtube_link](http://img.youtube.com/vi/x8CfUd0MzoM/maxresdefault.jpg "youtube_link")
 ---
 
 ### Discussion
