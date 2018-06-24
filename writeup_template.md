@@ -248,10 +248,15 @@ You can run the in[29] cell in the ipynb notebook and findout the implementation
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./output_project_video_1.mp4)
-youtube link for the same is here ![youtube Link](https://www.youtube.com/watch?v=x8CfUd0MzoM)
+Here's a ![local file](./output_project_video_1.mp4)
 
-[youtube_link](http://img.youtube.com/vi/x8CfUd0MzoM/maxresdefault.jpg "youtube_link")
+![youtube_link](http://img.youtube.com/vi/x8CfUd0MzoM/maxresdefault.jpg "youtube_link")
+
+
+
+youtube link for the same is here ![youtube Link](https://www.youtube.com/watch?v=x8CfUd0MzoM, "youtube link")
+
+
 ---
 
 ### Discussion
