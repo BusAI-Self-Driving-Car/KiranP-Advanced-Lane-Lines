@@ -39,13 +39,28 @@ The goals / steps of this project are the following:
 [image18]: ./assets/measuring_curvature.png   " Measuring Curvature"
 [image19]: ./assets/final_result.png      " Final Color Binary"
 [image20]:  ./assets/mtransform.png       "mtransform"
+[image21]: ./assets/xhl_binary.png        "XHL Binary"
+[image22]: ./assets/xhl_histogram.png     "XHL Histogram"
 [video1]: ./output_project_video_1.mp4    "Video"
+
+### Changelog
+Two Changes made from the last time I submitted
+
+1. Updating the Color Space Binary Selection, I switched XHL Binary which is nothing but HLS+ Sobel Filter.
+    ```python
+    #finding color space
+    combined_binary = xhl_thresh(warped, (5, 100), (18, 50), (195, 255))
+    ```
+2. Changing the Center Offset calculation
+    ```python
+    distance = round(((left_lane[-1] + right_lane[-1]) / 2 - 320) * 3.7 / 700, 2)
+    ```
 
 ## Final Video of the Advanced Lane Mapping
 
-![youtubeimage](http://img.youtube.com/vi/x8CfUd0MzoM/maxresdefault.jpg) 
+![youtubeimage](http://img.youtube.com/vi/GZHPb4_bw0U/maxresdefault.jpg) 
 
-[youtube_link](https://youtu.be/x8CfUd0MzoM "youtube_link")
+[youtube_link](https://youtu.be/GZHPb4_bw0U "youtube_link")
 
 ### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
@@ -111,35 +126,28 @@ Look at the following python functions about the color spaces I explored.
 
 As you can see after trying out all the different color spaces such as RGB, HLS, HSV I settled for Combined color code is as shown below
 
-```python
-if channel is 'hls':
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2HLS)
-    elif channel is 'hsv':
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
-    elif channel is 'yuv':    
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2YUV)
-    elif channel is 'ycrcb':
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb)
-    elif channel is 'lab':
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2Lab)
-    elif channel is 'luv':
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2Luv)
-```
-Which tries to convert to HLS, HSV, YUV, YCRB, LAB & LUV color spaces and then combining them like this
+Finally I ended up choosing the XHL Binary space code for the same is given below
 
 ```python
-def combined_color(img):
-     bin_rgb_ch1, bin_rgb_ch2, bin_rgb_ch3 = color_threshold(img, channel='rgb', thresh=(230,255))
-     bin_hsv_ch1, bin_hsv_ch2, bin_hsv_ch3 = color_threshold(img, channel='hsv', thresh=(230,255))    
-     bin_luv_ch1, bin_luv_ch2, bin_luv_ch3 = color_threshold(img, channel='luv', thresh=(157,255))
+def xhl_thresh(img, x_thresh, h_thresh, l_thresh):
+    hls = cv2.cvtColor(img, cv2.COLOR_RGB2HLS)
+    h = hls[:,:,0]
+    l = hls[:,:,1]
+    h_binary = np.zeros_like(h)
+    h_binary[(h > h_thresh[0]) & (h <= h_thresh[1])] = 1
+    l_binary = np.zeros_like(l)
+    l_binary[(l > l_thresh[0]) & (l <= l_thresh[1])] = 1
+    hl_binary = np.zeros_like(l)
+    hl_binary[(h_binary == 1) | (l_binary == 1)] = 1
+    
+    sxbinary = abs_sobel_thresh(img, 'x', 5, x_thresh)
+    xhl_binary = np.zeros_like(sxbinary)
+    xhl_binary[(hl_binary == 1) & (sxbinary == 1)] = 1
+    
+    return xhl_binary
 
-     binary = np.zeros_like(bin_rgb_ch1)
-    
-     binary[(bin_rgb_ch1 == 1) | (bin_hsv_ch3 == 1) | (bin_luv_ch3 == 1) ] = 1
-    
-     return binary
 ```
-![Final Chosen Color Space][image13]
+![XHL Binary][image21]
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
@@ -174,7 +182,7 @@ I verified that my perspective transform was working as expected by drawing the 
 
 After applying calibration, thresholding, and a perspective transform to a road image, I take a binary image where the lane lines stand out clearly. However,I still need to decide explicitly which pixels are part of the lines and which belong to the left line and which belong to the right line.
 
-I first take a histogram along all the columns in the lower half of the image like this:
+I first take a histogram along all the columns in the lower half of the image like this: XHL Histogram
 
 ```python
 import numpy as np
@@ -183,7 +191,7 @@ import matplotlib.pyplot as plt
 histogram = np.sum(img[img.shape[0]//2:,:], axis=0)
 plt.plot(histogram)```
 
-![Histogram][image14]
+![Histogram][image22]
 
 
 ##### Sliding Windows
@@ -248,11 +256,11 @@ You can run the in[29] cell in the ipynb notebook and findout the implementation
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-![youtube_icon](http://img.youtube.com/vi/x8CfUd0MzoM/maxresdefault.jpg) 
+![youtube_icon](http://img.youtube.com/vi/GZHPb4_bw0U/maxresdefault.jpg) 
 
 Here's a [local file][video1]
 
-[youtube Link](https://www.youtube.com/watch?v=x8CfUd0MzoM, "youtube link")
+[youtube Link](https://youtu.be/GZHPb4_bw0U, "youtube link")
 
 
 ---
